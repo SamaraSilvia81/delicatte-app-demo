@@ -1,11 +1,16 @@
 // scripts/seed.js
 // ─────────────────────────────────────────────
 // Popula o Back4App com 15 produtos da Delicatte.
-// Rodar: npm run seed
+// Rodar: npm run seed (lê as chaves do .env)
 // ─────────────────────────────────────────────
 
-const APP_ID   = 'gIzxO3tBSpMQ5yf8vEc16I4fRjeutu3a8mIuKdse'
-const REST_KEY = 'nUaXboH7fQKOi4p9N409P2xALHLWeJbXedaiUUV6'
+const APP_ID   = process.env.VITE_BACK4APP_APP_ID
+const REST_KEY = process.env.BACK4APP_REST_KEY
+
+if (!APP_ID || !REST_KEY) {
+  console.error('Faltam credenciais. Copie .env.example para .env e preencha VITE_BACK4APP_APP_ID e BACK4APP_REST_KEY.')
+  process.exit(1)
+}
 const BASE_URL = 'https://parseapi.back4app.com'
 
 const HEADERS = {

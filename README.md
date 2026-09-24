@@ -38,7 +38,7 @@ Oferecer à proprietária de uma confeitaria artesanal uma ferramenta simples e 
 
 ## ⚙️ Requisitos
 
-- Node.js `>= 18`
+- Node.js `>= 20.6` (o script de seed usa `--env-file`)
 - npm ou yarn
 - Conta no [Back4App](https://back4app.com) com as classes `Product`, `Order` e `_User` configuradas
 
@@ -50,13 +50,35 @@ Oferecer à proprietária de uma confeitaria artesanal uma ferramenta simples e 
 # 1. Instalar dependências
 npm install
 
-# 2. Popular banco com produtos de exemplo (opcional)
+# 2. Configurar as credenciais
+cp .env.example .env
+#    abra o .env e preencha com as chaves do seu app no Back4App
+
+# 3. Popular banco com produtos de exemplo (opcional)
 npm run seed
 
-# 3. Iniciar servidor de desenvolvimento
+# 4. Iniciar servidor de desenvolvimento
 npm run dev
 # → http://localhost:3000
 ```
+
+### Variáveis de ambiente
+
+| Variável | Usada por | Onde encontrar |
+|---|---|---|
+| `VITE_BACK4APP_APP_ID` | App e seed | Back4App → App Settings → Security & Keys → Application ID |
+| `VITE_BACK4APP_JS_KEY` | App | Back4App → App Settings → Security & Keys → JavaScript Key |
+| `BACK4APP_REST_KEY` | Só o seed | Back4App → App Settings → Security & Keys → REST API Key |
+
+O `.env` está no `.gitignore` e nunca deve ser commitado. A `BACK4APP_REST_KEY` não tem o prefixo `VITE_` de propósito: variáveis sem esse prefixo nunca entram no código que vai para o navegador.
+
+### Deploy no GitHub Pages
+
+O workflow em `.github/workflows/deploy-vite-pages.yml` publica o site a cada push na `main`. Como o `.env` não vai para o repositório, as chaves precisam estar cadastradas como **secrets**: no GitHub, vá em **Settings → Secrets and variables → Actions** e crie `VITE_BACK4APP_APP_ID` e `VITE_BACK4APP_JS_KEY`.
+
+> **Sobre segurança:** a JavaScript Key acaba no código publicado, e qualquer pessoa pode vê-la. Isso é esperado no Parse. O que protege os dados são as **Class Level Permissions** (CLP) no Back4App. Configure `Product` com leitura pública e escrita só para admin, `Order` sem leitura pública, e proteja o campo `role` de `_User` para que nenhum usuário consiga se promover a admin.
+
+> **Versão React:** a migração deste projeto para React está em [delicatte-confeitaria-app](https://github.com/SamaraSilvia81/delicatte-confeitaria-app).
 
 ---
 
